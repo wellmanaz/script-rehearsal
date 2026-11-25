@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f1a33">
+  <meta name="description" content="Run your lines against the rest of the cast.">
+  <title>Script Rehearsal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-view="library">
+  <header class="topbar">
+    <button id="nav-back" class="icon-btn" type="button" aria-label="Back" hidden>&#8249;</button>
+    <h1 id="page-title">Script Rehearsal</h1>
+  </header>
+
+  <main>
+    <!-- Your scripts -->
+    <section id="view-library" class="view">
+      <p class="lede">Run your lines against the rest of the cast. Lines your castmates record play in their voices; anything not recorded is read aloud by your device.</p>
+      <div class="row">
+        <button id="btn-new" class="btn primary" type="button">Add a script</button>
+        <button id="btn-sample" class="btn" type="button">Try the sample scene</button>
+      </div>
+      <h2 id="library-heading" class="section-title" hidden>Your scripts</h2>
+      <ul id="script-list" class="card-list"></ul>
+      <p class="fine">Scripts and recordings stay on this device. Nothing is uploaded.</p>
+    </section>
+
+    <!-- Add a script -->
+    <section id="view-new" class="view" hidden>
+      <label class="field">
+        <span>Title</span>
+        <input id="new-title" type="text" autocomplete="off" placeholder="Title">
+      </label>
+      <label class="field">
+        <span>Script</span>
+        <textarea id="new-text" rows="12" spellcheck="false" placeholder="Paste the script here, or open a text file below."></textarea>
+      </label>
+      <div class="row">
+        <label class="btn file-btn">Open a text file
+          <input id="new-file" type="file" accept=".txt,.fountain,.md,text/plain">
+        </label>
+      </div>
+      <details class="help">
+        <summary>How to format a script</summary>
+        <p>Speaker names in capitals work best, in any of these layouts:</p>
+        <pre>MAYA
+You're late.
+
+THEO: I know.
+
+MS. OKAFOR. Places, everyone.</pre>
+        <p>Scene headings such as <code>SCENE 2</code>, <code>ACT ONE</code> or <code>INT. KITCHEN</code> let you rehearse one scene at a time. Put stage directions in parentheses or on their own lines. Fountain screenplay files work too.</p>
+      </details>
+      <div id="new-preview" class="preview" aria-live="polite"></div>
+      <div class="row">
+        <button id="btn-save-script" class="btn primary" type="button" disabled>Save script</button>
+      </div>
+    </section>
+
+    <!-- Script page -->
+    <section id="view-script" class="view" hidden>
+      <h2 class="section-title">Who are you playing?</h2>
+      <div id="char-picker" class="chips" role="group" aria-label="Your parts"></div>
+      <p id="picker-hint" class="fine"></p>
+
+      <div class="options">
+        <label id="opt-start-wrap" class="field">
+          <span>Start from</span>
+          <select id="opt-start"></select>
+        </label>
+        <label id="opt-scene-only-wrap" class="check">
+          <input id="opt-scene-only" type="checkbox"> Stop at the end of that scene
+        </label>
+        <label class="field">
+          <span>Your lines show as</span>
+          <select id="opt-hint">
+            <option value="first">First letters</option>
+            <option value="hidden">Hidden</option>
+            <option value="full">Full text</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Cue pickup after your line</span>
+          <select id="opt-pickup">
+            <option value="0">Tight</option>
+            <option value="400">Natural</option>
+            <option value="1000">Relaxed</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Device voice speed <output id="opt-rate-out"></output></span>
+          <input id="opt-rate" type="range" min="0.7" max="1.5" step="0.05">
+        </label>
+        <label id="opt-record-me-wrap" class="check">
+          <input id="opt-record-me" type="checkbox"> Record me while I rehearse, so I can play the run back
+        </label>
+      </div>
+      <p id="voice-note" class="status warn" hidden>This browser can&rsquo;t read lines aloud, so only recorded lines will play.</p>
+
+      <div class="row actions">
+        <button id="btn-rehearse" class="btn primary big" type="button">Rehearse</button>
+        <button id="btn-record" class="btn big" type="button">Record lines</button>
+      </div>
+
+      <h2 class="section-title">Recordings</h2>
+      <ul id="rec-summary" class="plain-list"></ul>
+      <div class="row">
+        <button id="btn-export" class="btn" type="button">Share recordings</button>
+        <label class="btn file-btn">Add castmates&rsquo; recordings
+          <input id="import-file" type="file" accept=".json,application/json">
+        </label>
+      </div>
+      <p id="share-status" class="status" aria-live="polite"></p>
+
+      <details class="danger-zone">
+        <summary>Remove this script</summary>
+        <button id="btn-delete" class="btn danger" type="button">Delete script and its recordings</button>
+      </details>
+    </section>
+
+    <!-- Rehearse -->
+    <section id="view-rehearse" class="view rehearse" hidden>
+      <div id="run-script" class="run-script"></div>
+      <div id="run-done" class="run-done" hidden>
+        <div class="row">
+          <button id="run-again" class="btn primary" type="button">Run it again</button>
+          <button id="run-playback" class="btn" type="button" hidden>Play back your run</button>
+          <button id="run-exit" class="btn" type="button">Back to the script</button>
+        </div>
+      </div>
+      <div class="controls">
+        <p id="run-status" class="run-status" aria-live="polite"></p>
+        <div class="controls-row">
+          <button id="run-back" class="btn" type="button">Back</button>
+          <button id="run-reveal" class="btn" type="button">Reveal</button>
+          <button id="run-next" class="btn primary big" type="button">Start</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Record lines -->
+    <section id="view-record" class="view" hidden>
+      <label class="field">
+        <span>Record lines for</span>
+        <select id="rec-character"></select>
+      </label>
+      <p class="fine"><span id="rec-progress"></span>. Tap Record, say the line, tap Stop. Recorded lines replace the device voice whenever anyone rehearses this script on this device, or adds your recordings to theirs.</p>
+      <p id="rec-error" class="status error" aria-live="polite"></p>
+      <ol id="rec-lines" class="rec-lines"></ol>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="js/core.js"></script>
+  <script src="js/sample.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
