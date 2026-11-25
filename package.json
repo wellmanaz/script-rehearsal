@@ -1,0 +1,15 @@
+{
+  "name": "script-rehearsal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Run your lines against the rest of the cast, in the browser.",
+  "scripts": {
+    "start": "npx --yes serve -l 8080 .",
+    "test": "node --test test/core.test.js",
+    "test:ui": "node test/ui-smoke.js"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.0.0",
+    "jsdom": "^24.1.3"
+  }
+}
